@@ -1,6 +1,6 @@
 #ifndef INDEX_H_
 #define INDEX_H_
-
+#define N 100
 #include <iostream>
 #include <string>
 #include <fstream>
@@ -10,22 +10,30 @@
 
 using namespace std;
 
-class Index
+class IndexNode
 {
 private:
-    vector<int> d;
-    Index **child_ptr;
+    int* ind;
+    int* val;
+    IndexNode **child_ptr;
     bool l;
     int n;
 public:
-    Index(int num_row, vector<int> key, int value);
+    IndexNode(bool l);
     int search_index(int key);
-    void insert_data(int key, int value);
-    void adjust();
-    void key_query(vector<int> query_keys);
-    void range_query(vector<pair<int, int>> query_pairs);
+    void insert_data(int ind, int val);
+    void adjust(int i, IndexNode *y);
+friend class Index;
 };
-
+class Index
+{
+    IndexNode *root;
+public:
+    Index(int num_rows, vector<int>key, vector<int> value);
+    void insert_node(int ind, int val);
+    void key_query(vector<int> query_keys);
+    void range_query( vector<int> query_pairs);
+};
 
 
 
