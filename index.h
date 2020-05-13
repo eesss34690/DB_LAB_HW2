@@ -1,6 +1,5 @@
 #ifndef INDEX_H_
 #define INDEX_H_
-#define N 100
 #include <iostream>
 #include <string>
 #include <fstream>
