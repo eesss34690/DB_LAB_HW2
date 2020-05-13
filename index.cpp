@@ -11,6 +11,10 @@ IndexNode::IndexNode()
 {
     this->n= 0;
     this->child_ptr= new IndexNode* [N+ 1];
+    for (int i= 0; i< N+ 1; i++)
+    {
+        child_ptr[i]= NULL;
+    }
     this->ind= new int [N];
     this->val= new int [N];
     this->parent= NULL;
@@ -20,7 +24,8 @@ Index::Index(int num_row, vector<int> key, vector<int> value)
     this->root= NULL;
     for(int i = 0; i< key.size(); i++)
     {
-        insert_node(key[i], value[i]);
+    //cout<<key.at(i)<<" "<<value.at(i)<<endl;
+        insert_node(key.at(i), value.at(i));
     }
 }
 finding Index::search_index(int key)
@@ -47,9 +52,10 @@ finding Index::search_index(int key)
         }
         par= cur;
         cur = cur->child_ptr[i];
+
         i = 0;
     }
-    cout<<key<<" ";
+    //cout<<key<<" ";
     a.par= par;
     a.val= -1;
     return a;
@@ -66,14 +72,14 @@ void Index::insert_node(int ind, int val)
     else
     {
         finding a= search_index(ind);
+        //cout<<ind<<endl;
         IndexNode* cur= a.par;
         IndexNode* parent= cur->parent;
         IndexNode *s = root;
-        cout<<ind<<endl;
         while(1)
         {
             insert_data(cur, ind, val);
-            cout<<val<<" ";
+            //cout<<val<<" ";
             if (cur->n >= N)
             {
                 int mid= (cur->n- 1)/ 2;
