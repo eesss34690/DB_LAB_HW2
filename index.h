@@ -16,20 +16,25 @@ private:
     int* ind;
     int* val;
     IndexNode **child_ptr;
-    bool l;
+    IndexNode* parent;
     int n;
 public:
-    IndexNode(bool l);
-    int search_index(int key);
-    void insert_data(int ind, int val);
-    void adjust(int i, IndexNode *y);
+    IndexNode();
+    void adjust(int i, int ind, int val, IndexNode *y);
 friend class Index;
+};
+struct finding
+{
+    IndexNode* par;
+    int val;
 };
 class Index
 {
     IndexNode *root;
 public:
     Index(int num_rows, vector<int>key, vector<int> value);
+    finding search_index(int key);
+    void insert_data(IndexNode* cur, int ind, int val);
     void insert_node(int ind, int val);
     void key_query(vector<int> query_keys);
     void range_query( vector<int> query_pairs);
