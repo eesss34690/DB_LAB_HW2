@@ -5,7 +5,7 @@
 #include <vector>
 #include <utility>
 #include "index.h"
-#define N 200
+#define N 100
 using namespace std;
 IndexNode::IndexNode()
 {
@@ -24,14 +24,16 @@ Index::Index(int num_row, vector<int> key, vector<int> value)
     this->root= NULL;
     for(int i = 0; i< key.size(); i++)
     {
+    cout<<i<<endl;
         insert_node(key.at(i), value.at(i));
     }
 }
 finding Index::search_index(int key)
 {
-    cout<<key;
-    IndexNode* cur= root;
-    IndexNode* par= NULL;
+    IndexNode* cur= new IndexNode();
+    cur= root;
+    IndexNode* par= new IndexNode();
+    par= NULL;
     finding a;
     int i= 0;
     while (cur)
@@ -44,6 +46,8 @@ finding Index::search_index(int key)
             {
                 a.par= par;
                 a.val= cur->val[i];
+                delete cur;
+                delete par;
                 return a;
             }
             else
@@ -56,13 +60,15 @@ finding Index::search_index(int key)
     }
     a.par= par;
     a.val= -1;
+    delete cur;
+    delete par;
     return a;
 }
 void Index::insert_node(int ind, int val)
 {
     if (root == NULL)
     {
-        root = new IndexNode();
+        root= new IndexNode();
         root->ind[0]= ind;
         root->val[0]= val;
         root->n= 1;
@@ -70,9 +76,10 @@ void Index::insert_node(int ind, int val)
     else
     {
         finding a= search_index(ind);
-        IndexNode* cur= a.par;
-        IndexNode* parent= cur->parent;
-        IndexNode *s = root;
+        IndexNode* cur= new IndexNode();
+        cur= a.par;
+        IndexNode* parent= new IndexNode();
+        parent= cur->parent;
         while(1)
         {
             insert_data(cur, ind, val);
@@ -110,6 +117,7 @@ void Index::insert_node(int ind, int val)
                     cur->parent= temp;
                     right->parent= temp;
                     root= temp;
+                    delete temp;
                     break;
                 }
                 else
@@ -125,8 +133,11 @@ void Index::insert_node(int ind, int val)
                     cur= parent;
                     parent= cur->parent;
                 }
+                delete right;
             }
         }
+        delete cur;
+        delete parent;
     }
     cout<<ind<<" "<<val<<endl;
 }

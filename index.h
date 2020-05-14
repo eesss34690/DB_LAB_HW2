@@ -12,9 +12,9 @@ struct finding;
 class IndexNode
 {
 public:
-    vector<int> ind;
-    vector<int> val;
-    vector<IndexNode*>child_ptr;
+    int* ind;
+    int* val;
+    IndexNode** child_ptr;
     IndexNode* parent;
     int n;
 public:
