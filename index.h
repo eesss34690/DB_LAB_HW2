@@ -12,11 +12,11 @@ struct finding;
 class IndexNode
 {
 public:
-    int* ind;
-    int* val;
-    IndexNode** child_ptr;
+    vector<int> ind;
+    vector<int> val;
+    vector<IndexNode*> child_ptr;
     IndexNode* parent;
-    int n;
+    bool leaf= true;
 public:
     IndexNode();
     void adjust(int i, int ind, int val, IndexNode *y);

@@ -11,7 +11,7 @@ void read_input_file(int& num_rows, vector<int>& key, vector<int>& value)
 {
     //readfile
     fstream file;
-    file.open("data.txt");
+    file.open("data2.txt");
     string line;
 
     while(getline(file, line, '\n'))
