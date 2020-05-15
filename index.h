@@ -73,25 +73,16 @@ class Index
 		void Search_Path(Node* node, int key, stack<Node*>* path);
 		void Destroy(Node* node);
 
-#ifdef DEBUG
-		void Reveal_Tree(Node* node);
-#endif
-
 	public:
 		void Initialize();
 		Index(int num, vector<int> keys, vector<int> val);
 		void Insert(int key, int value);
-		void Search(int key);
-		void Search(int key1, int key2);
+		int Search1(int key);
+		vector<int> Search2(int key1, int key2);
 		void key_query(vector<int> query_keys);
 		void range_query(vector<pair<int,int>> query_pairs);
-		void Open_Output_File();
-		void Close_Output_File();
-		~Index();
+		void clear_index();
 
-#ifdef DEBUG
-		void Print_Tree();
-#endif
 };
 
 #endif // INDEX_H_INCLUDED

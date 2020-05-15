@@ -33,10 +33,10 @@ int main()
     myIndex.key_query(query_keys);
     chrono::steady_clock::time_point key_query = chrono::steady_clock::now();
     //Query by range of key
-    //myIndex.range_query(query_pairs);
+    myIndex.range_query(query_pairs);
     chrono::steady_clock::time_point range_query = chrono::steady_clock::now();
     //Free memory
-    //myIndex.clear_index();
+    myIndex.clear_index();
 
     auto time_to_build_index = chrono::duration_cast<chrono::microseconds>(built_index - start).count();
     auto time_to_query_key = chrono::duration_cast<chrono::microseconds>(key_query - built_index).count();
