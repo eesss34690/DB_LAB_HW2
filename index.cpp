@@ -167,63 +167,12 @@ Index :: Index(int num, vector<int> keys, vector<int> val)
     }
 }
 
-vector<int> Index :: Search(int key1, int key2)
-{
-    vector<int> a;
-	if(NULL == root)
-	{
-		a.push_back(-1);
-	}
-
-	else
-	{
-		int i = 0;
-
-		stack<Node*>* path = new stack<Node*>;
-		stack<Node*>* path2= new stack<Node*>;
-		Search_Path(root, key1, path);
-		Search_Path(root, key2, path2);
-
-		vector<int> key = path->top()->keys;
-		vector<int> keys2 = path2->top()->keys;
-		vector<int> v = path->top()->values;
-		Node* n = new Node;
-		n = path->top()->next;
-		vector<int>::iterator index = lower_bound(key.begin(), key.end(), key1);
-        vector<int>::iterator index2 = lower_bound(keys2.begin(), keys2.end(), key2);
-
-            while(1)
-            {
-                if((index - key.begin()) == key.size())
-                {
-                    key = n->keys;
-                    v = n->values;
-                    n = n->next;
-                    index = key.begin();
-                }
-                if((key1 <= key[index - key.begin()]) && (key[index - key.begin()] <= key2))
-                {
-                    a.push_back(v[index- key.begin()]);
-                }
-                else
-                {
-                    break;
-                }
-                index++;
-            }
-
-
-
-		delete(path);
-		delete(path2);
-	}
-	return a;
-}
 void Index :: key_query(vector<int> query_keys)
 {
     fstream output;
     vector<int> k, v;
     vector<int>::iterator index;
+    Node* a= new Node;
     output.open(OUTPUT_FILE, ios::out | ios::trunc);
     for (int i= 0; i< query_keys.size(); i++)
     {
@@ -232,12 +181,22 @@ void Index :: key_query(vector<int> query_keys)
             output<<"-1"<<endl;
             continue;
         }
+        a= root;
+        while(!a->isLeaf)
+        {
+            index = lower_bound(a->keys.begin(), a->keys.end(), query_keys[i]);
+            if(query_keys[i] == a->keys[index - a->keys.begin()])
+            {
+                a= a->children[(index - a->keys.begin()) + 1];
+            }
 
-        stack<Node*>* path = new stack<Node*>;
-        Search_Path(root, query_keys[i], path);
-
-        k = path->top()->keys;
-        v = path->top()->values;
+            else
+            {
+                a= a->children[index - a->keys.begin()];
+            }
+        }
+        k = a->keys;
+        v = a->values;
         index = lower_bound(k.begin(), k.end(), query_keys[i]);
 
         if(query_keys[i] == k[index - k.begin()])
@@ -250,29 +209,70 @@ void Index :: key_query(vector<int> query_keys)
             output<<"-1"<<endl;
         }
 
-        delete(path);
     }
+    delete(a);
     output.close();
 }
 void Index :: range_query(vector<pair<int,int>> query_pairs)
 {
     fstream output2;
+    vector<int> k, v;
+    vector<int>::iterator index;
     output2.open(OUT2, ios::out | ios::trunc);
-    vector<int> a;
+    Node* n = new Node;
+    Node* a1= new Node;
+    int ans;
     for (int i= 0 ; i< query_pairs.size(); i++)
     {
-        a = Search(query_pairs[i].first, query_pairs[i].second);
-        if (a.size()== 1&& a[0]== -1)
+        if(NULL == root)
         {
-            output2<<"-1\n";
+            output2<<"-1"<<endl;
+            continue;
         }
-        else
+        ans= -1;
+        a1= root;
+        while(!a1->isLeaf)
         {
-            output2<<*max_element(a.begin(), a.end())<<endl;
+            index = lower_bound(a1->keys.begin(), a1->keys.end(), query_pairs[i].first);
+            if(query_pairs[i].first == a1->keys[index - a1->keys.begin()])
+            {
+                a1= a1->children[(index - a1->keys.begin()) + 1];
+            }
+
+            else
+            {
+                a1= a1->children[index - a1->keys.begin()];
+            }
         }
-        a.clear();
+        k = a1->keys;
+        v = a1->values;
+        index = lower_bound(k.begin(), k.end(), query_pairs[i].first);
+		n = a1->next;
+        while(1)
+        {
+            if((index - k.begin()) == k.size())
+            {
+                k = n->keys;
+                v = n->values;
+                n = n->next;
+                index = k.begin();
+            }
+            if((query_pairs[i].first <= k[index - k.begin()]) && (k[index - k.begin()] <= query_pairs[i].second))
+            {
+                if (ans < v[index- k.begin()])
+                    ans = v[index- k.begin()];
+            }
+            else
+            {
+                break;
+            }
+            index++;
+        }
+        output2<<ans<<endl;
 
     }
+    delete(a1);
+    delete(n);
 	output2.close();
 }
 
